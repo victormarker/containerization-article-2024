@@ -1,0 +1,57 @@
+services:
+  gateway:
+    build: ./frontend
+    environment:
+      GATEWAY_HOST: localhost
+      GATEWAY_PORT: 80
+      BACKEND_SSO: sso:8000
+      BACKEND_ERP: erp:8000
+      BACKEND_MARKETPLACE: marketplace:8000
+      BACKEND_MARKETING: marketing:8000
+    ports:
+      - "80:80"
+    depends_on:
+      - sso
+      - erp
+      - marketing
+      - marketplace
+
+  sso:
+    build: ./backend/sso
+    environment:
+      WEB_ENV: production
+      UVICORN_PORT: 8000
+    volumes:
+      - ./configs/sso:/app/config
+    expose:
+      - 8000
+
+  erp:
+    build: ./backend/erp
+    environment:
+      WEB_ENV: production
+      UVICORN_PORT: 8000
+    volumes:
+      - ./configs/erp:/app/config
+    expose:
+      - 8000
+
+  marketing:
+    build: ./backend/marketing
+    environment:
+      WEB_ENV: production
+      UVICORN_PORT: 8000
+    volumes:
+      - ./configs/marketing:/app/config
+    expose:
+      - 8000
+
+  marketplace:
+    build: ./backend/marketplace
+    environment:
+      WEB_ENV: production
+      UVICORN_PORT: 8000
+    volumes:
+      - ./configs/marketplace:/app/config
+    expose:
+      - 8000
